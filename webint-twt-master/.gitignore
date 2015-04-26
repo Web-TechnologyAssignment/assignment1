@@ -1,0 +1,7 @@
+.sass-cache
+npm-debug.log
+database.json
+/node_modules
+/config/app.json
+/app/config/app.json
+/public/assets

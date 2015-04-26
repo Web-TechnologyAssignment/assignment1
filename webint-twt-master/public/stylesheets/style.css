@@ -1,0 +1,49 @@
+body {
+  font: 14px "Roboto", Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+  background-image: url(../images/gplaypattern.png);
+  background-attachment: fixed; }
+
+a {
+  color: #00B7FF; }
+
+.tweetstream {
+  background-color: white;
+  border: 1px solid #eee;
+  padding-top: 70px;
+  padding-bottom: 20px; }
+  .tweetstream .tab-content {
+    padding-top: 15px; }
+  .tweetstream .user_status h3, .tweetstream .user_profile h3 {
+    margin-top: 0px; }
+  .tweetstream .user_status hr, .tweetstream .user_profile hr {
+    margin: 10px 0px; }
+  .tweetstream .user_status footer {
+    margin-top: -8px; }
+    .tweetstream .user_status footer cite {
+      line-height: 2.2em; }
+  .tweetstream .user_profile img {
+    padding: 2px;
+    border: 1px solid #BBB;
+    background-color: white; }
+  .tweetstream cite a {
+    color: white; }
+  .tweetstream .interesting-venues p {
+    font-size: 16px; }
+  .tweetstream .interesting-venues table {
+    width: 100%; }
+  .tweetstream .interesting-venues table td {
+    padding-bottom: 15px;
+    vertical-align: top; }
+  .tweetstream .interesting-venues table td:first-child {
+    width: 100px; }
+  .tweetstream .interesting-venues img {
+    padding: 3px;
+    background-color: white;
+    border: 1px solid #ccc; }
+  .tweetstream .interesting-venues .type {
+    text-transform: capitalize; }
+  .tweetstream .interesting-venues iframe.map {
+    border: 1px solid #ccc; }
+
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,129 @@
+extends ../layouts/main
+
+block content
+  h3 Users Index
+  .row
+    .col-sm-4.col-xs-12
+      .well
+        form(action='/user/topic-discussed', method='GET', role='form')
+          legend Discussion
+          .form-group
+            label(for='usernames') Username
+            input.form-control(id='usernames' type='text', placeholder='Username',name='username',required)
+            span(style='color: gray; font-size: 0.85em;')
+              i Press Enter and you can add upto 10 usernames
+          .form-group
+            label(for='keywords_limit') Keywords Limit
+            input.form-control(id='keywords_limit' type='number', min=1, placeholder='Keywords Limit',name="word_limit",required)
+          .form-group
+            label(for='days_limit') Days Limit
+            input.form-control(id='days_limit' type='number', min=1, max=6,placeholder='Days Limit', name="days_limit",required)
+          button.btn.btn-primary.btn-block.btn-lg(type='submit') Search 
+          
+    .col-sm-4.col-xs-12
+      .well
+        form(action='/user/interesting-venues', method='GET', role='form')
+          legend Interesting Venues
+          .form-group
+            label(for='username') Username
+            input.form-control(id='username' type='text', name='username', placeholder='Username', required)
+          .form-group
+            label(for='days_limit') Days Limit
+            input.form-control(id='days_limit' type='number', name='days_limit', min=0, max=9, placeholder='Days Limit', required)
+            span(style='color: gray; font-size: 0.85em;')
+              i Enter 0 for streaming places
+          button.btn.btn-primary.btn-block.btn-lg(type='submit') Search 
+    .col-sm-4.col-xs-12
+      .well
+        form(action='/user/venue-visitors', method='GET', role='form')
+          legend Venue visitors
+          div(role='tabpanel')
+            .nav(role='tablist')
+              .btn-group(role='presentation')
+                a.btn.btn-info.active(href='#place', aria-controls='place', role='tab', data-toggle='tab', onclick='setTabActive(this)') Place
+                a.btn.btn-info(href='#coordinate', aria-controls='coordinate', role='tab', data-toggle='tab', onclick='setTabActive(this)') Coordinate
+
+            .tab-content
+              #place.tab-pane.fade.in.active(role='tabpanel')
+                .form-group
+                  label(for='location') Place
+                  input.form-control(id='location' type='text', name='location', placeholder='Location', required)
+              #coordinate.tab-pane.fade(role='tabpanel')
+                .row
+                  .col-xs-12.col-sm-6
+                    .form-group
+                      label(for='latitude') Latitude
+                      input.form-control(id='latitude' type='text', name='latitude', placeholder='Latitude', disabled)
+                  .col-xs-12.col-sm-6
+                    .form-group
+                      label(for='longitude') Longitude
+                      input.form-control(id='longitude' type='text', name='longitude', placeholder='Longitude', disabled)
+
+          .form-group
+            label(for='days_limit') Days Limit
+            input.form-control(id='days_limit' type='number', name='days_limit', min=0, max=9, placeholder='Days Limit', required)
+            span(style='color: gray; font-size: 0.85em;')
+              i Enter 0 for streaming tweets
+            input(id='place_name', name='place_name', hidden)
+
+          button.btn.btn-primary.btn-block.btn-lg(type='submit') Search 
+
+append footer
+  script.
+    $(function(){
+
+      initializeSelect2AjaxSearch('usernames', 'search/users', 'Search for users', true);
+      initializeSelect2AjaxSearch('location', 'search/places', 'Search for place');
+      initializeSelect2AjaxSearch('username', 'search/users', 'Search for users');
+
+      // Listen to input changes. Place name is needed to be pass to the next view
+      $('#location, #latitude, #longitude').change(function(){
+        if($(this).attr('id')=='location')
+          $('#place_name').val($('#place .select2-chosen').text());
+        else
+          $('#place_name').val($('#latitude').val() + ',' + $('#longitude').val())
+      });
+
+    });
+
+    // Change the venue button tab state
+    function setTabActive(currentTab){
+      currentTab = $(currentTab);
+
+      // Remove tab that is active, and set current tab as active
+      currentTab.parent().find('.active').removeClass('active').find('input,select').removeAttr('required');
+      currentTab.addClass('active');
+
+      // Disable field for inactive tab content
+      $('.tab-content').find('input, select, textarea').prop('disabled', true).prop('required', false);
+      $('#'+currentTab.attr('aria-controls')).find('input, select, textarea').prop('disabled', false).not('.select2-input,.select2-focusser,.select2-offscreen').prop('required', true);
+    }
+
+    function initializeSelect2AjaxSearch(id, url, placeholder, tag){
+      var options = {
+        placeholder: placeholder,
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+          quietMillis: 500,
+          url: url,
+          dataType: 'json',
+          data: function(params){
+            var obj = {};
+            obj[id] = params
+            return obj;
+          },
+          results: function (data) {
+            return { results: data };
+          },
+          cache: true
+        }
+      };
+
+      if(tag){
+        options['tag'] = true;
+        options['multiple'] = true;
+        options['maximumSelectionSize']=10;
+      }
+      $('#'+id).select2(options);
+    }

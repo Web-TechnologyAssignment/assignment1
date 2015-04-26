@@ -1,0 +1,44 @@
+extends ../layouts/main
+
+block content
+  
+  .container
+    .page-header
+      h1 Discussions on "#{keyword}":
+ 
+  .row
+    .col-xs-12
+      each status, i in tweets
+        if i % 3 == 0
+          .row
+            each tweet, j in tweets.slice(i, i+3)
+              .col-sm-4.col-xs-12
+                .panel.panel-info
+                  .panel-heading
+                    center 
+                      img.img-circle(style='width: 25%;', src=tweet.user.profile_image_url.replace('normal', 'bigger'))
+                    center
+                      b #{tweet.user.name}
+                        br
+                      a(href='/user/profile/'+tweet.user.screen_name) @#{tweet.user.screen_name}
+           
+                  .panel-body
+                    p Tweeted on 
+                      span.created_at(style='font-weight: bold;') #{tweet.created_at}
+                        |:
+                      center 
+                        if tweet.retweeted_status
+                          a(href='/tweet/retweet?id='+tweet.retweeted_status.id_str) #{tweet.text}
+                        else
+                          | #{tweet.text}
+                    p Retweet Count: #{tweet.retweet_count}
+
+
+append footer
+  script.
+    $(function(){
+      var created_at = $('.created_at');
+      $.each(created_at, function(index, value){
+        $(value).text(moment($(value).text(), 'ddd MMM DD HH:mm:ss ZZ YYYY').format('dddd DD MMM'));
+      });
+    })  
